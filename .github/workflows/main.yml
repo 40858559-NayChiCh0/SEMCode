@@ -1,13 +1,10 @@
 name: SemCode action
+on: push
 
-on:
-  push:
-    branches:
-      - master
-      - release/*
 
 jobs:
   build:
+    name: Hello world action
     runs-on: ubuntu-latest
 
     steps:
