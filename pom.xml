@@ -22,7 +22,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.napier.Main</mainClass>
+                            <mainClass>com.napier.App</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
