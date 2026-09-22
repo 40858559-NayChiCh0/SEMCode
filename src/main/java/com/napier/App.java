@@ -1,5 +1,5 @@
 package com.napier;
-public class Main {
+public class App {
     static void main() {
         System.out.println("Boo yah!");
     }
