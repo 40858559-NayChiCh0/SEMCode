@@ -3,7 +3,7 @@ on: push
 
 jobs:
   build:
-    name: Hello world action
+    name: Build and Package
     runs-on: ubuntu-latest
 
     steps:
@@ -16,20 +16,8 @@ jobs:
           java-version: '25'
           distribution: 'temurin'
 
-      - name: Setup Network and Database
-        run: |
-          docker network create --driver bridge se-methods
-          docker pull mongo
-          docker run -d --name mongo-dbserver --network se-methods mongo
-
-      - name: Build Application with Maven
+      - name: Build JAR Package with Maven
         run: mvn clean package
 
       - name: Build Docker Image
         run: docker build -t devopsimage .
-
-      - name: Run Container
-        run: docker run --network se-methods --name devopscontainer devopsimage
-
-      - name: View Container Logs
-        run: docker logs devopscontainer
