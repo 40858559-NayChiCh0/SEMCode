@@ -1,5 +1,4 @@
 FROM eclipse-temurin:25
-COPY ./target/classes/com /tmp/com
+COPY ./target/SEMCode-1.0-SNAPSHOT-jar-with-dependencies.jar /tmp
 WORKDIR /tmp
-ENTRYPOINT ["java", "com.napier.App"]
-#ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "SEMCode-1.0-SNAPSHOT-jar-with-dependencies.jar"]
