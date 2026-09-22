@@ -9,32 +9,16 @@
     <version>0.1.0.2</version>
 
     <properties>
-        <maven.compiler.source>10</maven.compiler.source>
-        <maven.compiler.target>10</maven.compiler.target>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.3.0</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>com.napier.Main</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
     <dependencies>
         <dependency>
             <groupId>org.mongodb</groupId>
-            <artifactId>mongodb-driver</artifactId>
-            <version>3.6.4</version>
+            <artifactId>mongo-java-driver</artifactId>
+            <version>3.12.14</version>
         </dependency>
     </dependencies>
 
@@ -43,11 +27,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.6.0</version>
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.napier.devops.App</mainClass>
+                            <mainClass>com.napier.App</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
