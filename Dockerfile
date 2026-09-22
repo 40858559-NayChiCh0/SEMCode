@@ -1,4 +1,4 @@
 FROM eclipse-temurin:25
-COPY ./target/SEMCode-0.1.0.2.jar /tmp/SEMCode.jar
 WORKDIR /tmp
+COPY ./target/SEMCode-1.0-SNAPSHOT-jar-with-dependencies.jar /tmp/SEMCode.jar
 ENTRYPOINT ["java", "-jar", "SEMCode.jar"]
