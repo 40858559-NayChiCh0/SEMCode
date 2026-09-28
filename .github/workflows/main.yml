@@ -1,4 +1,5 @@
 name: SemCode action
+
 on: push
 
 jobs:
