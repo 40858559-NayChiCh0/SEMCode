@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/db/test_db/employees.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/db/test_db/employees_partitioned.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/db/test_db/employees_partitioned_5.1.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/db/test_db/objects.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/db/test_db/postgresql/employees.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/db/test_db/postgresql/objects.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/db/test_db/postgresql/test_employees_md5.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/db/test_db/postgresql/test_employees_sha.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/db/test_db/postgresql/test_employees_sha2.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/db/test_db/sakila/sakila-mv-schema.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/db/test_db/show_elapsed.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/db/test_db/test_employees_md5.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/db/test_db/test_employees_sha.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/db/test_db/test_employees_sha2.sql" dialect="GenericSQL" />
+  </component>
+</project>

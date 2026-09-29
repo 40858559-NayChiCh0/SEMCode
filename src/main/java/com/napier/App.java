@@ -17,8 +17,12 @@ public class App
         app.connect();
         Employee emp = app.getEmployee(10002);
         app.displayEmployee(emp);
+        //lab 3b
+        app.getEmployeesByTitle("Senior Engineer");
         // Disconnect from database
         app.disconnect();
+
+
     }
 
     /**
@@ -142,6 +146,49 @@ public class App
         }else
         {
             System.out.println("Employee not found ");
+        }
+    }
+
+    public void getEmployeesByTitle(String title)
+    {
+        try
+        {
+            Statement stmt = con.createStatement();
+
+            String strSelect =
+                    "SELECT employees.emp_no, employees.first_name, " +
+                            "employees.last_name, salaries.salary " +
+                            "FROM employees, salaries, titles " +
+                            "WHERE employees.emp_no = salaries.emp_no " +
+                            "AND employees.emp_no = titles.emp_no " +
+                            "AND salaries.to_date = '9999-01-01' " +
+                            "AND titles.to_date = '9999-01-01' " +
+                            "AND titles.title = '" + title + "' " +
+                            "ORDER BY employees.emp_no ASC";
+
+            ResultSet rs = stmt.executeQuery(strSelect);
+
+            while (rs.next())
+            {
+                int empNo = rs.getInt("emp_no");
+                String firstName = rs.getString("first_name");
+                String lastName = rs.getString("last_name");
+                int salary = rs.getInt("salary");
+
+                System.out.println(
+                        empNo + " " +
+                                firstName + " " +
+                                lastName + " " +
+                                salary
+                );
+            }
+
+            rs.close();
+            stmt.close();
+        }
+        catch (SQLException e)
+        {
+            System.out.println("Error: " + e.getMessage());
         }
     }
 }
