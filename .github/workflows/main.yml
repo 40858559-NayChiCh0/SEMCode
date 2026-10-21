@@ -23,4 +23,4 @@ jobs:
       - name: Package and Run docker compose
         run: |
           mvn package -DskipTests
-          docker compose up --abort-on-container-ext
+          docker-compose up --abort-on-container-ext
