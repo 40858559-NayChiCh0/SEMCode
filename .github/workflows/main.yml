@@ -18,7 +18,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Unit Tests
-        run: mav -Dtest=com.napier.AppTest test
+        run: mvn -Dtest=com.napier.AppTest test
 
       - name: Package and Run docker compose
         run: |
