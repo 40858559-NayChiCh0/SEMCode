@@ -9,6 +9,9 @@ on:
       - lab07
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
 
   # ==========================================
@@ -84,15 +87,29 @@ jobs:
           docker logs employees
           exit 1
 
-      - name: Run Integration Tests and Generate Coverage
-        run: |
-          mvn -B -Dtest=com.napier.AppIntegrationTest verify
+      # Run all unit and integration tests
+      # and generate JaCoCo coverage
+      - name: Run All Tests and Generate Coverage
+        run: mvn -B clean verify
 
-      - name: Verify JaCoCo Coverage Report
+      # Check that JaCoCo generated coverage data
+      - name: Check JaCoCo Coverage
         run: |
-          test -f target/site/jacoco/jacoco.xml
-          echo "JaCoCo XML coverage report exists"
+          echo "Checking JaCoCo XML report..."
 
+          test -s target/site/jacoco/jacoco.xml
+
+          echo "JaCoCo XML report exists"
+
+          echo "Coverage counters:"
+          grep -o '<counter type="LINE"[^>]*/>' \
+            target/site/jacoco/jacoco.xml | tail -1
+
+          echo "Instruction coverage:"
+          grep -o '<counter type="INSTRUCTION"[^>]*/>' \
+            target/site/jacoco/jacoco.xml | tail -1
+
+      # Upload coverage report to Codecov
       - name: Upload Coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
@@ -103,8 +120,7 @@ jobs:
 
       - name: Stop and Remove Database
         if: always()
-        run: |
-          docker rm -f employees || true
+        run: docker rm -f employees || true
 
   # ==========================================
   # JOB 3: BUILD AND RUN DOCKER COMPOSE
