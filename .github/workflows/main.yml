@@ -13,7 +13,6 @@ permissions:
   contents: read
 
 jobs:
-
   # ==========================================
   # JOB 1: UNIT TESTS
   # ==========================================
@@ -31,11 +30,11 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: '25'
-          distribution: 'temurin'
+          distribution: temurin
           cache: maven
 
       - name: Run Unit Tests
-        run: mvn -B -Dtest=com.napier.AppTest test
+        run: mvn -B -Dtest=AppTest test
 
   # ==========================================
   # JOB 2: INTEGRATION TESTS AND CODE COVERAGE
@@ -54,7 +53,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: '25'
-          distribution: 'temurin'
+          distribution: temurin
           cache: maven
 
       - name: Build MySQL Database Image
@@ -64,7 +63,7 @@ jobs:
         run: |
           docker run -d \
             --name employees \
-            -p 33060:3306 \
+            -p 127.0.0.1:33060:3306 \
             database
 
       - name: Wait for Employees Database
@@ -72,44 +71,55 @@ jobs:
           for i in $(seq 1 60); do
             if docker exec employees \
               mysql -uroot -pexample \
-              -e "SELECT COUNT(*) FROM employees.employees;" \
+              -e "SELECT COUNT(*) FROM employees.departments;" \
               >/dev/null 2>&1; then
 
               echo "Employees database is ready"
+              break
+            fi
+
+            if [ "$i" -eq 60 ]; then
+              echo "Database failed to initialize"
+              docker logs employees
+              exit 1
+            fi
+
+            echo "Waiting for database..."
+            sleep 3
+          done
+
+      - name: Verify MySQL Connection from Runner
+        run: |
+          for i in $(seq 1 30); do
+            if mysql \
+              --protocol=TCP \
+              --host=127.0.0.1 \
+              --port=33060 \
+              --user=root \
+              --password=example \
+              -e "SELECT dept_no, dept_name FROM employees.departments LIMIT 1;" \
+              >/dev/null 2>&1; then
+
+              echo "MySQL connection from runner successful"
               exit 0
             fi
 
-            echo "Waiting for Employees database..."
+            echo "Waiting for TCP MySQL connection..."
             sleep 2
           done
 
-          echo "Database failed to initialize"
+          echo "MySQL TCP connection failed"
           docker logs employees
           exit 1
 
-      # Run all unit and integration tests
-      # and generate JaCoCo coverage
       - name: Run All Tests and Generate Coverage
         run: mvn -B clean verify -Dtest=AppTest,AppIntegrationTest
 
-      # Check that JaCoCo generated coverage data
       - name: Check JaCoCo Coverage
         run: |
-          echo "Checking JaCoCo XML report..."
-
           test -s target/site/jacoco/jacoco.xml
-
           echo "JaCoCo XML report exists"
 
-          echo "Coverage counters:"
-          grep -o '<counter type="LINE"[^>]*/>' \
-            target/site/jacoco/jacoco.xml | tail -1
-
-          echo "Instruction coverage:"
-          grep -o '<counter type="INSTRUCTION"[^>]*/>' \
-            target/site/jacoco/jacoco.xml | tail -1
-
-      # Upload coverage report to Codecov
       - name: Upload Coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
@@ -139,7 +149,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: '25'
-          distribution: 'temurin'
+          distribution: temurin
           cache: maven
 
       - name: Package Application
