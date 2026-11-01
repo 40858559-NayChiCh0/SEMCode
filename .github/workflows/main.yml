@@ -1,37 +1,106 @@
-name: A workflow for my Hello World App
-on: push
+
+name: Lab 07 Integration Testing
+
+on:
+  push:
+    branches:
+      - master
+      - lab07
+  pull_request:
 
 jobs:
   UnitTests:
     name: Unit Tests
     runs-on: ubuntu-22.04
+
     steps:
       - name: Checkout
         uses: actions/checkout@v5
         with:
           submodules: recursive
+
       - name: Set up JDK 25
         uses: actions/setup-java@v5
         with:
           java-version: '25'
           distribution: 'temurin'
+
       - name: Unit Tests
-        run: mvn -Dtest=com.napier.AppTest test
+        run: mvn -B -Dtest=com.napier.AppTest test
+
+  IntegrationTests:
+    name: Integration Tests
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v5
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+
+      - name: Build Database
+        run: docker build -t database ./db
+
+      - name: Start Database
+        run: |
+          docker run --name employees \
+            -d -p 33060:3306 database
+
+      - name: Wait for Database
+        run: |
+          for i in $(seq 1 60); do
+            if docker exec employees \
+              mysqladmin ping \
+              -h 127.0.0.1 \
+              -u root \
+              -pexample --silent; then
+              echo "Database is ready"
+              exit 0
+            fi
+            sleep 2
+          done
+          docker logs employees
+          exit 1
+
+      - name: Integration Tests
+        run: mvn -B -Dtest=com.napier.AppIntegrationTest test
+
+      - name: Stop Database
+        if: always()
+        run: |
+          docker rm -f employees || true
 
   build:
-    name: Build and Start Using docker-compose
+    name: Build and Start Using Docker Compose
     runs-on: ubuntu-22.04
+
     steps:
       - name: Checkout
         uses: actions/checkout@v5
         with:
           submodules: recursive
+
       - name: Set up JDK 25
         uses: actions/setup-java@v5
         with:
           java-version: '25'
           distribution: 'temurin'
-      - name: Package and Run docker compose
+
+      - name: Package Application
+        run: mvn -B package -DskipTests
+
+      - name: Run Docker Compose
         run: |
-          mvn package -DskipTests
-          docker compose up --abort-on-container-exit
+          docker compose up --build \
+            --abort-on-container-exit \
+            --exit-code-from app
+
+      - name: Clean Up
+        if: always()
+        run: docker compose down
