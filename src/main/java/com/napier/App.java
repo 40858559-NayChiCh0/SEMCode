@@ -9,11 +9,15 @@ public class App {
     /**
      * Connection to MySQL database.
      */
-    private Connection con = null;
+    Connection con = null;
+    public void setConnection(Connection connection) {
+        this.con = connection;
+    }
 
     /**
      * Main method.
      */
+
     public static void main(String[] args) {
 
         App a = new App();
