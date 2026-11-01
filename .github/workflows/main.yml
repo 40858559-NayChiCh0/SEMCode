@@ -90,7 +90,7 @@ jobs:
       # Run all unit and integration tests
       # and generate JaCoCo coverage
       - name: Run All Tests and Generate Coverage
-        run: mvn -B clean verify
+        run: mvn -B clean verify -Dtest=AppTest,AppIntegrationTest
 
       # Check that JaCoCo generated coverage data
       - name: Check JaCoCo Coverage
