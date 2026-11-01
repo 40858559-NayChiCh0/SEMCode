@@ -1,4 +1,6 @@
+
 package com.napier;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -20,7 +22,8 @@ public class AppIntegrationTest {
         app = new App();
 
         connection = DriverManager.getConnection(
-                "jdbc:mysql://localhost:33060/employees",
+                "jdbc:mysql://127.0.0.1:33060/employees"
+                        + "?connectTimeout=10000",
                 "root",
                 "example"
         );
@@ -64,7 +67,6 @@ public class AppIntegrationTest {
         assertNull(emp);
     }
 
-
     @Test
     public void testGetDepartment() {
 
@@ -74,7 +76,6 @@ public class AppIntegrationTest {
         assertEquals("d001", dept.dept_no);
         assertEquals("Marketing", dept.dept_name);
     }
-
 
     @Test
     public void testGetInvalidDepartment() {
