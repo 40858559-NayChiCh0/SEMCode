@@ -10,3 +10,6 @@
 # DevOps
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/40858559-NayChiCh0/SEMCode/main.yml?branch=develop&style=flat-square)
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/40858559-NayChiCh0/SEMCode/main.yml?branch=develop&style=flat-square)](https://github.com/40858559-NayChiCh0/SEMCode/actions/workflows/main.yml)
+
+# Codecov
+[![codecov](https://codecov.io/github/40858559-NayChiCh0/SEMCode/graph/badge.svg?token=OCAL9X060G)](https://codecov.io/github/40858559-NayChiCh0/SEMCode)
