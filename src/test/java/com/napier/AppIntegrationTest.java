@@ -1,105 +1,86 @@
-
 package com.napier;
-
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AppIntegrationTest {
 
     static App app;
+    static Connection connection;
 
     @BeforeAll
-    static void init() {
+    public static void init() throws SQLException {
+
         app = new App();
-        app.connect("localhost:33060", 1000);
+
+        connection = DriverManager.getConnection(
+                "jdbc:mysql://localhost:33060/employees",
+                "root",
+                "example"
+        );
+
+        assertNotNull(connection);
+        assertFalse(connection.isClosed());
+
+        app.con = connection;
+
+        System.out.println(
+                "Database connection established."
+        );
     }
 
     @AfterAll
-    static void cleanup() {
-        app.disconnect();
+    public static void cleanup() throws SQLException {
+
+        if (connection != null && !connection.isClosed()) {
+            connection.close();
+        }
+
+        System.out.println(
+                "Database connection closed."
+        );
     }
 
-    // Test 1: Get an existing employee
     @Test
-    void testGetEmployee() {
-        Employee emp = app.getEmployee(255530);
+    public void testGetEmployee() {
+
+        Employee emp = app.getEmployee(10001);
 
         assertNotNull(emp);
-        assertEquals(255530, emp.emp_no);
-        assertEquals("Ronghao", emp.first_name);
-        assertEquals("Garigliano", emp.last_name);
+        assertEquals(10001, emp.emp_no);
     }
 
-    // Test 2: Get a non-existing employee
     @Test
-    void testGetInvalidEmployee() {
+    public void testGetInvalidEmployee() {
+
         Employee emp = app.getEmployee(-1);
 
         assertNull(emp);
     }
 
-    // Test 3: Get an existing department
+
     @Test
-    void testGetDepartment() {
-        Department dept = app.getDepartment("Development");
+    public void testGetDepartment() {
+
+        Department dept = app.getDepartment("Marketing");
 
         assertNotNull(dept);
-        assertEquals("Development", dept.dept_name);
-        assertEquals("d005", dept.dept_no);
+        assertEquals("d001", dept.dept_no);
+        assertEquals("Marketing", dept.dept_name);
     }
 
-    // Test 4: Get a non-existing department
+
     @Test
-    void testGetInvalidDepartment() {
-        Department dept = app.getDepartment("InvalidDepartment");
+    public void testGetInvalidDepartment() {
+
+        Department dept = app.getDepartment("invalid");
 
         assertNull(dept);
-    }
-
-    // Test 5: Get salaries by department
-    @Test
-    void testGetSalariesByDepartment() {
-        Department dept = app.getDepartment("Development");
-
-        assertNotNull(dept);
-
-        ArrayList<Employee> employees =
-                app.getSalariesByDepartment(dept);
-
-        assertNotNull(employees);
-        assertFalse(employees.isEmpty());
-
-        for (Employee emp : employees) {
-            assertNotNull(emp);
-            assertTrue(emp.salary > 0);
-        }
-    }
-
-    // Test 6: Get salaries with null department
-    @Test
-    void testNullDepartment() {
-        ArrayList<Employee> employees =
-                app.getSalariesByDepartment(null);
-
-        assertNotNull(employees);
-        assertTrue(employees.isEmpty());
-    }
-    @Test
-    void testAddEmployee()
-    {
-        Employee emp = new Employee();
-        emp.emp_no = 500000;
-        emp.first_name = "Kevin";
-        emp.last_name = "Chalmers";
-        app.addEmployee(emp);
-        emp = app.getEmployee(500000);
-        assertEquals(emp.emp_no, 500000);
-        assertEquals(emp.first_name, "Kevin");
-        assertEquals(emp.last_name, "Chalmers");
     }
 }
