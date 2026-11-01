@@ -369,42 +369,59 @@ public class App {
      * Add a new employee.
      * Used for Lab 07 integration testing.
      */
-    public void addEmployee(Employee emp) {
-
-        if (emp == null) {
-            System.out.println("Employee is null");
-            return;
+//    public void addEmployee(Employee emp) {
+//
+//        if (emp == null) {
+//            System.out.println("Employee is null");
+//            return;
+//        }
+//
+//        String sql =
+//                "INSERT INTO employees "
+//                        + "(emp_no, first_name, last_name, "
+//                        + "birth_date, gender, hire_date) "
+//                        + "VALUES (?, ?, ?, ?, ?, ?)";
+//
+//        try (PreparedStatement stmt =
+//                     con.prepareStatement(sql)) {
+//
+//            stmt.setInt(1, emp.emp_no);
+//            stmt.setString(2, emp.first_name);
+//            stmt.setString(3, emp.last_name);
+//            stmt.setDate(4,
+//                    Date.valueOf("1990-01-01"));
+//            stmt.setString(5, "M");
+//            stmt.setDate(6,
+//                    Date.valueOf("2020-01-01"));
+//
+//            stmt.executeUpdate();
+//
+//            System.out.println(
+//                    "Employee added successfully"
+//            );
+//
+//        } catch (SQLException e) {
+//            System.out.println(
+//                    "Failed to add employee: "
+//                            + e.getMessage()
+//            );
+//        }
+//    }
+    public void addEmployee(Employee emp)
+    {
+        try
+        {
+            Statement stmt = con.createStatement();
+            String strUpdate =
+                    "INSERT INTO employees (emp_no, first_name, last_name, birth_date, gender, hire_date) " +
+                            "VALUES (" + emp.emp_no + ", '" + emp.first_name + "', '" + emp.last_name + "', " +
+                            "'9999-01-01', 'M', '9999-01-01')";
+            stmt.execute(strUpdate);
         }
-
-        String sql =
-                "INSERT INTO employees "
-                        + "(emp_no, first_name, last_name, "
-                        + "birth_date, gender, hire_date) "
-                        + "VALUES (?, ?, ?, ?, ?, ?)";
-
-        try (PreparedStatement stmt =
-                     con.prepareStatement(sql)) {
-
-            stmt.setInt(1, emp.emp_no);
-            stmt.setString(2, emp.first_name);
-            stmt.setString(3, emp.last_name);
-            stmt.setDate(4,
-                    Date.valueOf("1990-01-01"));
-            stmt.setString(5, "M");
-            stmt.setDate(6,
-                    Date.valueOf("2020-01-01"));
-
-            stmt.executeUpdate();
-
-            System.out.println(
-                    "Employee added successfully"
-            );
-
-        } catch (SQLException e) {
-            System.out.println(
-                    "Failed to add employee: "
-                            + e.getMessage()
-            );
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            System.out.println("Failed to add employee");
         }
     }
 }
